@@ -1,0 +1,73 @@
+import argparse
+import math
+parser = argparse.ArgumentParser()
+parser.add_argument("--type", choices=["diff", "annuity"])
+parser.add_argument("--payment", type=float, default=False)
+parser.add_argument("--principal", type=int, default=False)
+parser.add_argument("--periods", type=int, default=False)
+parser.add_argument("--interest", type=float, default=False)
+args = parser.parse_args()
+
+alist = []
+
+for arg in vars(args):
+    if getattr(args, arg) is not None:
+        alist.append(getattr(args, arg))
+
+if args.type == "annuity":
+    if alist[1] < 0 or alist[2] < 0 or alist[3] < 0 or alist[4] < 0:
+        print("Incorrect parameters.")
+    else:
+        if len(alist) < 3:
+            print("Incorrect parameters.")
+        else:
+            if args.interest is False:
+                print("Incorrect parameters.")
+            else:
+                if args.payment is False:
+                    i = ((12 / 100) * args.interest) / (12 * 12 / 100 * 100)
+                    annuity = math.ceil(args.principal * ((i * (1 + i)**args.periods) / ((1 + i)**args.periods - 1)))
+                    print(f"Your annuity payment = {annuity}!")
+                    print(f'Overpayment = {args.periods * annuity - args.principal}')
+
+                if args.periods is False:
+                    i = ((12 / 100) * float(args.interest)) / (12 * 12 / 100 * 100)
+                    a = (args.payment / (args.payment - i * args.principal))
+                    periods = round(math.log(a, (i + 1)))
+                    if periods <= 12:
+                        print(f"It will take {periods} months to repay this loan!")
+                    elif periods > 12 and periods % 12 > 0:
+                        print(f"It will take {periods // 12} years and {periods % 12 + 1} months to repay this loan!")
+                    elif periods > 12 and periods % 12 == 0:
+                        print(f"It will take {periods // 12} years to repay this loan!")
+                    print(f'Overpayment = {int(periods * args.payment - args.principal)}')
+
+                if args.principal is False:
+                    i = ((12 / 100) * float(args.interest)) / (12 * 12 / 100 * 100)
+                    principal = math.floor(args.payment / ((i * (1 + i)**args.periods)
+                                                                / ((1 + i)**args.periods - 1)))
+                    print(f'Your loan principal = {principal}!')
+                    print(f'Overpayment = {int((float(args.payment) * int(args.periods)) - principal)}')
+
+
+if args.type == "diff":
+    if alist[1] < 0 or alist[2] < 0 or alist[3] < 0 or alist[4] < 0:
+        print("Incorrect parameters.")
+    else:
+        if len(alist) < 3:
+            print("Incorrect parameters.")
+        else:
+            if args.interest is False:
+                print("Incorrect parameters.")
+            elif args.interest is not False:
+                i = ((12 / 100) * args.interest) / (12 * 12 / 100 * 100)
+                m = 0
+                total = 0
+                for x in range(args.periods):
+                    m += 1
+                    each_month = math.ceil(args.principal // args.periods + i *
+                                           (args.principal - (args.principal * (m - 1)) / args.periods))
+                    total += each_month
+                    print(f'''Month {m}: payment is {each_month}''')
+                print()
+                print(f'Overpayment = {total - int(args.principal)}')
