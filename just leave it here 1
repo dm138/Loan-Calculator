@@ -1,0 +1,24 @@
+principal = int(input("Enter the loan principal:"))
+calculate = input('''What do you want to calculate?
+type "m" for number of monthly payments,
+type "p" for the monthly payment:''')
+if calculate == "m":
+    payment = int(input("Enter the monthly payment:"))
+    months = principal // payment
+    if principal / payment == 1:
+        print('It will take', principal // payment, 'month to repay the loan')
+    if principal % payment > 0:
+        print('It will take', principal // payment + 1, 'months to repay the loan')
+    if principal // payment > 1:
+        if principal % payment > 0:
+            print('It will take', principal // payment + 1, 'months to repay the loan')
+        if principal % payment == 0:
+            print('It will take', principal // payment, 'months to repay the loan')
+if calculate == "p":
+    months = int(input("Enter the number of months:"))
+    payment = principal // months
+    last = principal - (months - 1) * (principal // months + 1)
+    if principal % months == 0:
+        print("Your monthly payment =", principal // months)
+    if principal % months > 0:
+        print("Your monthly payment =", principal // months + 1, "and the last payment =", last)
